@@ -22,6 +22,11 @@ class MessagesController < ApplicationController
     render json: @message
   end
 
+  def search
+    messages = Message.search params[:content], match: :text_middle
+    render json: messages
+  end
+
   # POST /messages
   def create
     # @message = Message.new(message_params)
