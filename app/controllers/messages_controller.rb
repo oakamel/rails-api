@@ -5,73 +5,93 @@ class MessagesController < ApplicationController
 
   # GET /messages
   def index
-    @messages = Message.all
-
-    render json: @messages
+    application = Application.find_by(token: params[:application_id])
+    return render(json: {error: "application not found"}, status: :not_found) if !application
+    chat = Chat.find_by(application_id: application.id, number: params[:chat_id])
+    return render(json: {error: "chat not found"}, status: :not_found) if !chat
+    @messages = Message.where(chat_id: chat.id)
+    messages_list = []
+    for message in @messages do
+      messages_list.append(get_message_hash(application, chat, message))
+    end
+    render json: messages_list
   end
 
   # GET /messages/1
   def show
-    # Message.reindex
-    products = Message.search "kazx", match: :text_middle
-    puts "------------------"
-    # puts products
-    products.each do |product|
-      puts product.content
-    end
-    render json: @message
+    render json: get_message_hash(@application, @chat, @message)
   end
 
   def search
-    messages = Message.search params[:content], match: :text_middle
-    render json: messages
+    messages = Message.search params[:query], match: :text_middle
+    messages_list = []
+    for message in messages do
+      chat = Chat.find(message.chat_id)
+      application = Application.find(chat.application_id)
+      messages_list.append(get_message_hash(application, chat, message))
+    end
+    render json: messages_list
   end
 
   # POST /messages
   def create
-    # @message = Message.new(message_params)
+    # get application and chat
+    application = Application.find_by(token: params[:application_id])
+    return render(json: {error: "application not found"}, status: :not_found) if !application
+    chat = Chat.find_by(application_id: application.id, number: params[:chat_id])
+    return render(json: {error: "chat not found"}, status: :not_found) if !chat
 
-    # if @message.save
-    #   render json: @message, status: :created, location: @message
-    # else
-    #   render json: @message.errors, status: :unprocessable_entity
-    # end
-    content = params[:content] 
-    application_token = params[:application_token]
-    chat_number = params[:chat_number]
-    @application = Application.find_by(token: application_token)
-    @chat = Chat.find_by(application_id: @application.id, number: chat_number)
-    return render status: :unprocessable_entity if !@application || !@chat
-    token_chat_key = application_token + "_" + chat_number
+    # generate message number
+    token_chat_key = application.token + "_" + chat.number.to_s
     message_number = Redis.current.incr token_chat_key
-    Redis.current.sadd "dirty_chats", token_chat_key 
 
-    MessageWorker.perform_async(content, message_number, @application.id, @chat.id)
+    # mark chat as dirty
+    Redis.current.sadd "dirty_chats", token_chat_key 
+    
+    # queue message creation job
+    content = params[:content]
+    MessageWorker.perform_async(content, message_number, application.id, chat.id)
+
     render json: {
-      "application_token": application_token, 
-      "chat_number": chat_number, 
-      "message_number": message_number
+      "application_token": application.token, 
+      "chat_number": chat.number, 
+      "number": message_number,
+      "content": content
     }, status: :created
   end
 
-  # PATCH/PUT /messages/1
-  def update
-    if @message.update(message_params)
-      render json: @message
-    else
-      render json: @message.errors, status: :unprocessable_entity
-    end
-  end
+  # # PATCH/PUT /messages/1
+  # def update
+  #   if @message.update(message_params)
+  #     render json: @message
+  #   else
+  #     render json: @message.errors, status: :unprocessable_entity
+  #   end
+  # end
 
-  # DELETE /messages/1
-  def destroy
-    @message.destroy
-  end
+  # # DELETE /messages/1
+  # def destroy
+  #   @message.destroy
+  # end
 
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_message
-      @message = Message.find(params[:id])
+      @application = Application.find_by(token: params[:application_id])
+      return render(json: {error: "application not found"}, status: :not_found) if !@application
+      @chat = Chat.find_by(application_id: @application.id, number: params[:chat_id])
+      return render(json: {error: "chat not found"}, status: :not_found) if !@chat
+      @message = Message.find_by(chat_id: @chat.id, number: params[:id])
+      return render(json: {error: "message not found"}, status: :not_found) if !@message
+    end
+
+    def get_message_hash(application, chat, message)
+      {
+        application_token: application.token,
+        chat_number: chat.number,
+        number: message.number,
+        content: message.content
+      }
     end
 
     # Only allow a list of trusted parameters through.

@@ -1,0 +1,287 @@
+{
+	"info": {
+		"_postman_id": "9ef31e72-e9df-4735-951d-a2a55c7f31d4",
+		"name": "rails-api",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "applications",
+			"item": [
+				{
+					"name": "get all applications",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/applications",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"applications"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get application by token",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/applications/af886b5e-cdc4-4252-8f1d-1b039484116b",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"applications",
+								"af886b5e-cdc4-4252-8f1d-1b039484116b"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get application by token Copy",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/applications/af886b5e-cdc4-4252-8f1d-1b039484116b",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"applications",
+								"af886b5e-cdc4-4252-8f1d-1b039484116b"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "create application",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"app2\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/applications",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"applications"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "update application",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"app1\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/applications/af886b5e-cdc4-4252-8f1d-1b039484116b",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"applications",
+								"af886b5e-cdc4-4252-8f1d-1b039484116b"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "chats",
+			"item": [
+				{
+					"name": "get chat by application and chat number",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/applications/af886b5e-cdc4-4252-8f1d-1b039484116b/chats/1",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"applications",
+								"af886b5e-cdc4-4252-8f1d-1b039484116b",
+								"chats",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get all chats by application",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/applications/af886b5e-cdc4-4252-8f1d-1b039484116b/chats/",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"applications",
+								"af886b5e-cdc4-4252-8f1d-1b039484116b",
+								"chats",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "create chat",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/applications/ec2d04cb-e4a4-40d9-8410-d435e9f4d3fe/chats/",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"applications",
+								"ec2d04cb-e4a4-40d9-8410-d435e9f4d3fe",
+								"chats",
+								""
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "messages",
+			"item": [
+				{
+					"name": "get all messages by application and chat",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/applications/af886b5e-cdc4-4252-8f1d-1b039484116b/chats/1/messages",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"applications",
+								"af886b5e-cdc4-4252-8f1d-1b039484116b",
+								"chats",
+								"1",
+								"messages"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "create message",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"content\": \"hello omar\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/applications/af886b5e-cdc4-4252-8f1d-1b039484116b/chats/1/messages",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"applications",
+								"af886b5e-cdc4-4252-8f1d-1b039484116b",
+								"chats",
+								"1",
+								"messages"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get message by application, chat and message number",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/applications/af886b5e-cdc4-4252-8f1d-1b039484116b/chats/1/messages/1",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"applications",
+								"af886b5e-cdc4-4252-8f1d-1b039484116b",
+								"chats",
+								"1",
+								"messages",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "search messages",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/messages/search?query=test",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"messages",
+								"search"
+							],
+							"query": [
+								{
+									"key": "query",
+									"value": "test"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}

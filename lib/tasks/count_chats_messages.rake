@@ -1,5 +1,6 @@
 task :count_chats_messages => [:environment] do
   dirty_chats = Redis.current.smembers "dirty_chats"
+  Redis.current.del "dirty_chats"
   for dirty_chat in dirty_chats do
     dirty_chat_split = dirty_chat.split "_"
     application_token = dirty_chat_split[0]
@@ -10,5 +11,4 @@ task :count_chats_messages => [:environment] do
     chat.messages_count = messages_count
     chat.save
   end
-  Redis.current.del "dirty_chats"
 end
